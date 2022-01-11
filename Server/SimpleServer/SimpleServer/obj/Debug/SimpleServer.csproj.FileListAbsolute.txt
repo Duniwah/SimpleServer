@@ -4,3 +4,15 @@ E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csp
 E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.CoreCompileInputs.cache
 E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.exe
 E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.pdb
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\SimpleServer.exe
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\SimpleServer.pdb
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\ServerBase.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\log4net.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\ServerBase.pdb
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\log4net.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.AssemblyReference.cache
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.CoreCompileInputs.cache
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.CopyComplete
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.exe
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.pdb
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\log4net.config
