@@ -1,0 +1,6 @@
+E:\Self\Study_Server\Server\SimpleServer\ServerBase\bin\Debug\ServerBase.dll
+E:\Self\Study_Server\Server\SimpleServer\ServerBase\bin\Debug\ServerBase.pdb
+E:\Self\Study_Server\Server\SimpleServer\ServerBase\obj\Debug\ServerBase.csproj.AssemblyReference.cache
+E:\Self\Study_Server\Server\SimpleServer\ServerBase\obj\Debug\ServerBase.csproj.CoreCompileInputs.cache
+E:\Self\Study_Server\Server\SimpleServer\ServerBase\obj\Debug\ServerBase.dll
+E:\Self\Study_Server\Server\SimpleServer\ServerBase\obj\Debug\ServerBase.pdb

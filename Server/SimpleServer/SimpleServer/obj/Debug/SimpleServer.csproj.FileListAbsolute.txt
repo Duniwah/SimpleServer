@@ -1,0 +1,6 @@
+E:\Self\Study_Server\Server\SimpleServer\SimpleServer\bin\Debug\SimpleServer.exe
+E:\Self\Study_Server\Server\SimpleServer\SimpleServer\bin\Debug\SimpleServer.pdb
+E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.AssemblyReference.cache
+E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csproj.CoreCompileInputs.cache
+E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.exe
+E:\Self\Study_Server\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.pdb
