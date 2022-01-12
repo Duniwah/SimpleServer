@@ -16,3 +16,17 @@ E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.csp
 E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.exe
 E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\obj\Debug\SimpleServer.pdb
 E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\log4net.config
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\protobuf-net.Core.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\protobuf-net.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Buffers.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Collections.Immutable.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Memory.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Numerics.Vectors.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\protobuf-net.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\protobuf-net.Core.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Buffers.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Collections.Immutable.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Memory.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Numerics.Vectors.xml
+E:\Self\SimpleServer\Server\SimpleServer\SimpleServer\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
