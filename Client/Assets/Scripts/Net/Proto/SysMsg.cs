@@ -8,10 +8,28 @@ public class MsgSecret : MsgBase
     {
         ProtoType = ProtocolEnum.MsgSecret;
     }
-    [ProtoMember(1)] 
-    public override ProtocolEnum ProtoType { get; set; }
+    [ProtoMember(1)]
+    public override ProtocolEnum ProtoType
+    {
+        get;
+        set;
+    }
 
-    [ProtoMember(2)]
-    public string Srcret;
+    [ProtoMember(2)] public string Srcret;
 }
 
+[ProtoContract]
+public class MsgPing : MsgBase
+{
+    public MsgPing()
+    {
+        ProtoType = ProtocolEnum.MsgPing;
+    }
+
+    [ProtoMember(1)]
+    public override ProtocolEnum ProtoType
+    {
+        get;
+        set;
+    }
+}
