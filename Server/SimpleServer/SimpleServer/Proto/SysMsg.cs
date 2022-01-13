@@ -9,7 +9,7 @@ namespace SimpleServer.Proto
         {
             ProtoType = ProtocolEnum.MsgSecret;
         }
-        [ProtoMember(1)] public sealed override ProtocolEnum ProtoType { get; set; }
+        [ProtoMember(1)] public override ProtocolEnum ProtoType { get; set; }
 
         [ProtoMember(2)]
         public string Srcret;

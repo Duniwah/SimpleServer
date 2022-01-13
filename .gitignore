@@ -54,6 +54,14 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+/Client/[Ll]ibrary/
+/Client/[Ll]ogs/
+/Client/[Bb]uilds/
+/Client/[Tt]emp/
+/Client/[Oo]bj/
+/Client/[Bb]uild/
+/Client/[Mm]emoryCaptures/
+
 # Crashlytics generated file
 crashlytics-build.properties
 
