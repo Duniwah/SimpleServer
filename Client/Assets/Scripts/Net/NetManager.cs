@@ -31,8 +31,10 @@ public class NetManager : Singleton<NetManager>
     //处理心跳包的线程（后台也能运行）
     private Thread mHeartThread;
 
-    private static long lastPingTime;
-    private static long lastPongTime;
+    //最后一次发送心跳包的时间
+    private static long _lastPingTime;
+    //最后一次收到心跳包的时间
+    private static long _lastPongTime;
 
     private Queue<ByteArray> mWriteQueue;
 
@@ -40,6 +42,8 @@ public class NetManager : Singleton<NetManager>
     private List<MsgBase> mUnityMsgList;
     //消息长度（不包括心跳包）
     private int mMsgCount = 0;
+    //心跳包间隔时间
+    private const long PING_INTERVAL = 30;
 
     //简易事件
     public delegate void EventListener(string str);
@@ -132,7 +136,10 @@ public class NetManager : Singleton<NetManager>
     {
         while (mSocket != null && mSocket.Connected)
         {
-            if (mMsgList.Count <= 0) continue;
+            lock (mMsgList)
+            {
+                if (mMsgList.Count <= 0) continue;
+            }
             MsgBase msgBase = null;
             lock (mMsgList)
             {
@@ -146,7 +153,8 @@ public class NetManager : Singleton<NetManager>
             {
                 if (msgBase is MsgPing)
                 {
-                    lastPongTime = GetTimeStamp();
+                    _lastPongTime = GetTimeStamp();
+                    Debug.Log("收到心跳包：" + _lastPongTime);
                     mMsgCount--;
                 }
                 else
@@ -161,6 +169,28 @@ public class NetManager : Singleton<NetManager>
             else
             {
                 break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 心跳包处理
+    /// </summary>
+    private void PingThead()
+    {
+        while (mSocket != null && mSocket.Connected)
+        {
+            long timeNow = GetTimeStamp();
+            if (timeNow - _lastPingTime > PING_INTERVAL)
+            {
+                MsgPing msgPing = new MsgPing();
+                SendMessage(msgPing);
+                _lastPingTime = GetTimeStamp();
+            }
+            //如果心跳包过长时间没收到
+            if (timeNow - _lastPongTime > PING_INTERVAL * 4)
+            {
+                Close(false);
             }
         }
     }
@@ -205,8 +235,8 @@ public class NetManager : Singleton<NetManager>
         mMsgList = new List<MsgBase>();
         mUnityMsgList = new List<MsgBase>();
         mMsgCount = 0;
-        lastPongTime = GetTimeStamp();
-        lastPingTime = GetTimeStamp();
+        _lastPongTime = GetTimeStamp();
+        _lastPingTime = GetTimeStamp();
 
     }
 
@@ -229,6 +259,12 @@ public class NetManager : Singleton<NetManager>
                 IsBackground = true
             };
             mMsgThread.Start();
+
+            mHeartThread = new Thread(PingThead)
+            {
+                IsBackground = true
+            };
+            mHeartThread.Start();
 
             mConnecting = false;
             //获得密钥
@@ -436,7 +472,7 @@ public class NetManager : Singleton<NetManager>
     /// <param name="normal">是否正常关闭</param>
     public void Close(bool normal = true)
     {
-        if (mSocket == null || mConnecting)
+        if (mSocket == null || mConnecting || !mSocket.Connected)
         {
             return;
         }
@@ -469,7 +505,7 @@ public class NetManager : Singleton<NetManager>
         }
         Debug.LogError("Close Socket");
     }
-    
+
     public void SetKey(string key)
     {
         SecretKey = key;

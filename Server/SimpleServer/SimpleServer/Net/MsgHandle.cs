@@ -1,4 +1,5 @@
-﻿using SimpleServer.Proto;
+﻿using ServerBase;
+using SimpleServer.Proto;
 namespace SimpleServer.Net
 {
     /// <summary>
@@ -16,6 +17,22 @@ namespace SimpleServer.Net
             MsgSecret msgSecret = (MsgSecret) msgBase;
             msgSecret.Srcret = ServerSocket.SecretKey;
             ServerSocket.Send(c, msgSecret);
+        }
+        
+        public static void MsgPing(ClientSocket c, MsgBase msgBase)
+        {
+            c.LastPingTime = ServerSocket.GetTimeStamp();
+            MsgPing msgPong = new MsgPing();
+            ServerSocket.Send(c, msgPong);
+        }
+        
+        public static void MsgTest(ClientSocket c, MsgBase msgBase)
+        {
+            MsgTest msgTest = (MsgTest) msgBase;
+            Debug.Log(msgTest.ReqContent);
+            msgTest.RecContent = "服务器放回的数据!";
+             // +"Ocean dsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwerdsfsdffdsegvxcvxdfgawerrtwerwerwerwer";;
+            ServerSocket.Send(c, msgTest);
         }
     }
 }

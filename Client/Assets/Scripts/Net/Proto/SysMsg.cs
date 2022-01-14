@@ -33,3 +33,21 @@ public class MsgPing : MsgBase
         set;
     }
 }
+
+[ProtoContract]
+public class MsgTest : MsgBase
+{
+    public MsgTest()
+    {
+        ProtoType = ProtocolEnum.MsgTest;
+    }
+
+    [ProtoMember(1)]
+    public override ProtocolEnum ProtoType
+    {
+        get;
+        set;
+    }
+    [ProtoMember(2)] public string ReqContent { get; set; }
+    [ProtoMember(3)] public string RecContent { get; set; }
+}

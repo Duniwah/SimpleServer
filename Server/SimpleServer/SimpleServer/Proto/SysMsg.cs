@@ -11,7 +11,41 @@ namespace SimpleServer.Proto
         }
         [ProtoMember(1)] public override ProtocolEnum ProtoType { get; set; }
 
-        [ProtoMember(2)]
-        public string Srcret;
+        [ProtoMember(2)] public string Srcret;
     }
+
+    [ProtoContract]
+    public class MsgPing : MsgBase
+    {
+        public MsgPing()
+        {
+            ProtoType = ProtocolEnum.MsgPing;
+        }
+
+        [ProtoMember(1)]
+        public override ProtocolEnum ProtoType
+        {
+            get;
+            set;
+        }
+    }
+
+    [ProtoContract]
+    public class MsgTest : MsgBase
+    {
+        public MsgTest()
+        {
+            ProtoType = ProtocolEnum.MsgPing;
+        }
+
+        [ProtoMember(1)]
+        public override ProtocolEnum ProtoType
+        {
+            get;
+            set;
+        }
+        [ProtoMember(2)] public string ReqContent { get; set; }
+        [ProtoMember(3)] public string RecContent { get; set; }
+    }
+    
 }

@@ -14,6 +14,10 @@ public class GameStart : MonoBehaviour
     void Update()
     {
         mNetManager.Update();
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            ProtocolMgr.SocketTest();
+        }
     }
 
     private void OnApplicationQuit()
