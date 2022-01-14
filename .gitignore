@@ -63,6 +63,10 @@ sysinfo.txt
 /Client/[Mm]emoryCaptures/
 /Server/SimpleServer/packages/
 
+/Server/SimpleServer/SimpleServer/bin/[Dd]ebug/
+/Server/SimpleServer/SimpleServer/obj/[Dd]ebug/
+/Client/.idea/
+
 # Crashlytics generated file
 crashlytics-build.properties
 
