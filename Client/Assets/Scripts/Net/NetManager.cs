@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 public class NetManager : Singleton<NetManager>
@@ -33,6 +34,8 @@ public class NetManager : Singleton<NetManager>
     private static long lastPingTime;
     private static long lastPongTime;
 
+    private Queue<ByteArray> mWriteQueue;
+
     private List<MsgBase> mMsgList;
     private List<MsgBase> mUnityMsgList;
     //消息长度（不包括心跳包）
@@ -40,7 +43,13 @@ public class NetManager : Singleton<NetManager>
 
     //简易事件
     public delegate void EventListener(string str);
+
     private Dictionary<NetEvent, EventListener> mListenersDic = new Dictionary<NetEvent, EventListener>();
+
+    public delegate void ProtoListener(MsgBase msg);
+
+    private Dictionary<ProtocolEnum, ProtoListener> mProtoDic = new Dictionary<ProtocolEnum, ProtoListener>();
+
     public void AddEventListener(NetEvent netEvent, EventListener listener)
     {
         if (mListenersDic.ContainsKey(netEvent))
@@ -71,28 +80,59 @@ public class NetManager : Singleton<NetManager>
         }
     }
 
+    /// <summary>
+    /// 一个协议只有一个监听
+    /// </summary>
+    /// <param name="protocolEnum"></param>
+    /// <param name="listener"></param>
+    public void AddProtoListener(ProtocolEnum protocolEnum, ProtoListener listener)
+    {
+        mProtoDic[protocolEnum] = listener;
+    }
+
+    public void FirstProto(ProtocolEnum protocolEnum, MsgBase msgBase)
+    {
+        if (mProtoDic.ContainsKey(protocolEnum))
+        {
+            mProtoDic[protocolEnum](msgBase);
+        }
+    }
+
     public void Update()
     {
         MsgUpdate();
     }
-    
+
     private void MsgUpdate()
     {
         if (mSocket != null && mSocket.Connected)
         {
-            if(mMsgCount == 0) return;
-            
+            if (mMsgCount == 0) return;
+            MsgBase msgBase = null;
+            lock (mUnityMsgList)
+            {
+                if (mUnityMsgList.Count > 0)
+                {
+                    msgBase = mUnityMsgList[0];
+                    mUnityMsgList.RemoveAt(0);
+                    mMsgCount--;
+                }
+            }
+            if (msgBase != null)
+            {
+                FirstProto(msgBase.ProtoType, msgBase);
+            }
         }
     }
-    
+
     /// <summary>
     /// 消息线程处理函数
     /// </summary>
     private void MsgThread()
     {
-        while (mSocket!=null && mSocket.Connected)
+        while (mSocket != null && mSocket.Connected)
         {
-            if(mMsgList.Count<=0) continue;
+            if (mMsgList.Count <= 0) continue;
             MsgBase msgBase = null;
             lock (mMsgList)
             {
@@ -100,7 +140,7 @@ public class NetManager : Singleton<NetManager>
                 {
                     msgBase = mMsgList[0];
                     mMsgList.RemoveAt(0);
-                } 
+                }
             }
             if (msgBase != null)
             {
@@ -159,6 +199,7 @@ public class NetManager : Singleton<NetManager>
         //初始化变量
         mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         mReadBuff = new ByteArray();
+        mWriteQueue = new Queue<ByteArray>();
         mConnecting = false;
         mClosing = false;
         mMsgList = new List<MsgBase>();
@@ -166,6 +207,7 @@ public class NetManager : Singleton<NetManager>
         mMsgCount = 0;
         lastPongTime = GetTimeStamp();
         lastPingTime = GetTimeStamp();
+
     }
 
     /// <summary>
@@ -187,8 +229,10 @@ public class NetManager : Singleton<NetManager>
                 IsBackground = true
             };
             mMsgThread.Start();
-            
+
             mConnecting = false;
+            //获得密钥
+            ProtocolMgr.SecretRequest();
             mSocket.BeginReceive(mReadBuff.Bytes, mReadBuff.WriteIdx, mReadBuff.Remain, 0, ReceiveCallback, socket);
         }
         catch (SocketException e)
@@ -197,7 +241,7 @@ public class NetManager : Singleton<NetManager>
             mConnecting = false;
         }
     }
-    
+
     /// <summary>
     /// 接受数据回调
     /// </summary>
@@ -214,8 +258,7 @@ public class NetManager : Singleton<NetManager>
                 Close();
                 return;
             }
-            //TODO 看下是不是错了
-            mReadBuff.ReadIdx += count;
+            mReadBuff.WriteIdx += count;
             OnReceiveData();
             if (mReadBuff.Remain < 8)
             {
@@ -286,6 +329,107 @@ public class NetManager : Singleton<NetManager>
         }
     }
 
+    public void SendMessage(MsgBase msgBase)
+    {
+        if (mSocket == null || !mSocket.Connected)
+        {
+            return;
+        }
+
+        if (mConnecting)
+        {
+            Debug.LogError("正在连接服务器中，无法发送消息");
+            return;
+        }
+
+        if (mClosing)
+        {
+            Debug.LogError("正在关闭连接中，无法发送消息");
+            return;
+        }
+
+        try
+        {
+            byte[] nameBytes = MsgBase.EncodeName(msgBase);
+            byte[] bodyBytes = MsgBase.Encond(msgBase);
+            int len = nameBytes.Length + bodyBytes.Length;
+            byte[] byteHead = BitConverter.GetBytes(len);
+            byte[] sendBytes = new byte[byteHead.Length + len];
+            Array.Copy(byteHead, 0, sendBytes, 0, byteHead.Length);
+            Array.Copy(nameBytes, 0, sendBytes, byteHead.Length, nameBytes.Length);
+            Array.Copy(bodyBytes, 0, sendBytes, byteHead.Length + nameBytes.Length, bodyBytes.Length);
+            ByteArray ba = new ByteArray(sendBytes);
+            int count = 0;
+            lock (mWriteQueue)
+            {
+                mWriteQueue.Enqueue(ba);
+                count = mWriteQueue.Count;
+            }
+            if (count == 1)
+            {
+                mSocket.BeginSend(sendBytes, 0, sendBytes.Length, 0, SendCallback, mSocket);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("SendMessage Error:" + e);
+            Close();
+        }
+    }
+
+    /// <summary>
+    /// 发送结束回调
+    /// </summary>
+    /// <param name="ar"></param>
+    private void SendCallback(IAsyncResult ar)
+    {
+        try
+        {
+            Socket socket = (Socket) ar.AsyncState;
+            if (socket == null || !socket.Connected) return;
+            int count = socket.EndSend(ar);
+            //判断是否发送完整
+            ByteArray ba;
+            lock (mWriteQueue)
+            {
+                ba = mWriteQueue.First();
+            }
+            ba.ReadIdx += count;
+
+            if (ba.Length == 0)//说明发送完整了
+            {
+                lock (mWriteQueue)
+                {
+                    mWriteQueue.Dequeue();
+                    if (mWriteQueue.Count > 0)//说明还有没有发送的数据
+                    {
+                        ba = mWriteQueue.First();
+                    }
+                    else
+                    {
+                        ba = null;
+                    }
+                }
+            }
+
+            //说明发送不完整或者发送完整且存在第二条数据
+            if (ba != null)
+            {
+                socket.BeginSend(ba.Bytes, ba.ReadIdx, ba.Length, 0, SendCallback, socket);
+            }
+            //确保关闭连接前，把消息都发送完
+            else if (mClosing)
+            {
+                RealClose();
+            }
+        }
+        catch (SocketException e)
+        {
+            Debug.LogError("SendCallback Error:" + e);
+            Close();
+        }
+    }
+
     /// <summary>
     /// 关闭连接
     /// </summary>
@@ -296,17 +440,41 @@ public class NetManager : Singleton<NetManager>
         {
             return;
         }
+        if (mConnecting) return;
+        lock (mWriteQueue)
+        {
+            if (mWriteQueue.Count > 0)
+            {
+                mClosing = true;
+                return;
+            }
+        }
+        RealClose(normal);
+    }
+
+    private void RealClose(bool normal = true)
+    {
         SecretKey = "";
         mSocket.Close();
         FirstEvent(NetEvent.Close, normal.ToString());
+        if (mHeartThread != null && mHeartThread.IsAlive)
+        {
+            mHeartThread.Abort();
+            mHeartThread = null;
+        }
+        if (mMsgThread != null && mMsgThread.IsAlive)
+        {
+            mMsgThread.Abort();
+            mMsgThread = null;
+        }
         Debug.LogError("Close Socket");
     }
-
+    
     public void SetKey(string key)
     {
         SecretKey = key;
     }
-    
+
     public static long GetTimeStamp()
     {
         TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);

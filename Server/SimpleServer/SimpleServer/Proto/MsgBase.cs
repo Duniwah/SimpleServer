@@ -17,11 +17,11 @@ namespace SimpleServer.Proto
         public static byte[] EncodeName(MsgBase msgBase)
         {
             byte[] nameBytes = System.Text.Encoding.UTF8.GetBytes(msgBase.ProtoType.ToString());
-            Int16 len = (Int16)nameBytes.Length;
+            Int16 len = (Int16) nameBytes.Length;
             byte[] bytes = new byte[2 + len];
             bytes[0] = (byte) (len % 256);
             bytes[1] = (byte) (len / 256);
-            Array.Copy(nameBytes,0,bytes,2,len);
+            Array.Copy(nameBytes, 0, bytes, 2, len);
             return bytes;
         }
 
@@ -32,7 +32,7 @@ namespace SimpleServer.Proto
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static ProtocolEnum DecodeName(byte[] bytes,int offset,out int count)
+        public static ProtocolEnum DecodeName(byte[] bytes, int offset, out int count)
         {
             count = 0;
             if (offset + 2 > bytes.Length) return ProtocolEnum.None;
@@ -43,7 +43,7 @@ namespace SimpleServer.Proto
             try
             {
                 string name = System.Text.Encoding.UTF8.GetString(bytes, offset + 2, len);
-                return (ProtocolEnum)Enum.Parse(typeof(ProtocolEnum), name);
+                return (ProtocolEnum) Enum.Parse(typeof(ProtocolEnum), name);
             }
             catch (Exception ex)
             {
@@ -95,7 +95,7 @@ namespace SimpleServer.Proto
             try
             {
                 byte[] newBytes = new byte[count];
-                Array.Copy(bytes,offset,newBytes,0,count);
+                Array.Copy(bytes, offset, newBytes, 0, count);
                 string secret = ServerSocket.SecretKey;
                 if (protocol == ProtocolEnum.MsgSecret)
                 {
@@ -105,8 +105,8 @@ namespace SimpleServer.Proto
                 newBytes = AES.AESDecrypt(newBytes, secret);
                 using (var memory = new MemoryStream(newBytes, 0, newBytes.Length))
                 {
-                    Type t = Type.GetType(protocol.ToString());
-                    return (MsgBase)Serializer.NonGeneric.Deserialize(t, memory);
+                    Type t = Type.GetType("SimpleServer.Proto." + protocol);
+                    return (MsgBase) Serializer.NonGeneric.Deserialize(t, memory);
                 }
             }
             catch (Exception ex)

@@ -27,6 +27,15 @@ public class ByteArray
         WriteIdx = 0;
     }
 
+    public ByteArray(byte[] defaultBytes)
+    {
+        Bytes = defaultBytes;
+        mCapacity = defaultBytes.Length;
+        mInitSize = defaultBytes.Length;
+        ReadIdx = 0;
+        WriteIdx = defaultBytes.Length;
+    }
+
     /// <summary>
     /// 检测并移动数据
     /// </summary>

@@ -124,7 +124,8 @@ namespace SimpleServer.Net
                 ClientSocket clientSocket = new ClientSocket
                 {
                     Socket = client,
-                    LastPingTime = GetTimeStamp()
+                    LastPingTime = GetTimeStamp(),
+                    ReadBuff = new ByteArray()
                 };
                 ClientDic.Add(client, clientSocket);
                 Debug.Log("一个客户端连接：{0}，当前有{1}个客户端在线", client.LocalEndPoint.ToString(), ClientDic.Count);
