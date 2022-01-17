@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer", "SimpleServe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerBase", "ServerBase\ServerBase.csproj", "{02FF49B6-06AE-41BC-964E-9B259AE0C2CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySql", "MySql\MySql.csproj", "{442C2F97-3BC1-41D8-B6BF-A962CD9CEB0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{02FF49B6-06AE-41BC-964E-9B259AE0C2CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02FF49B6-06AE-41BC-964E-9B259AE0C2CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02FF49B6-06AE-41BC-964E-9B259AE0C2CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{442C2F97-3BC1-41D8-B6BF-A962CD9CEB0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{442C2F97-3BC1-41D8-B6BF-A962CD9CEB0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{442C2F97-3BC1-41D8-B6BF-A962CD9CEB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{442C2F97-3BC1-41D8-B6BF-A962CD9CEB0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

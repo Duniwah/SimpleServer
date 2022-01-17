@@ -37,6 +37,10 @@
           <HintPath>..\packages\protobuf-net.2.4.4\lib\net40\protobuf-net.dll</HintPath>
           <Private>True</Private>
         </Reference>
+        <Reference Include="SqlSugar, Version=5.0.5.3, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\SqlSugar.5.0.5.3\lib\SqlSugar.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
           <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -72,6 +76,8 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Business\ServerEnum.cs" />
+        <Compile Include="Business\UserManager.cs" />
         <Compile Include="Net\ByteArray.cs" />
         <Compile Include="Net\ClientSocket.cs" />
         <Compile Include="Net\MsgHandle.cs" />
@@ -83,9 +89,10 @@
         <Compile Include="Proto\SysMsg.cs" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Business" />
-    </ItemGroup>
-    <ItemGroup>
+      <ProjectReference Include="..\MySql\MySql.csproj">
+        <Project>{442c2f97-3bc1-41d8-b6bf-a962cd9ceb0a}</Project>
+        <Name>MySql</Name>
+      </ProjectReference>
       <ProjectReference Include="..\ServerBase\ServerBase.csproj">
         <Project>{02ff49b6-06ae-41bc-964e-9b259ae0c2cb}</Project>
         <Name>ServerBase</Name>
