@@ -61,8 +61,8 @@ sysinfo.txt
 /Client/[Oo]bj/
 /Client/[Bb]uild/
 /Client/[Mm]emoryCaptures/
-/Server/SimpleServer/packages/
 
+/Server/SimpleServer/packages/
 /Server/SimpleServer/SimpleServer/bin/[Dd]ebug/
 /Server/SimpleServer/SimpleServer/obj/[Dd]ebug/
 /Client/.idea/

@@ -12,12 +12,14 @@ namespace SimpleServer.Business
         /// <param name="registerType"></param>
         /// <param name="userName"></param>
         /// <param name="pwd"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
-        public RegisterResult Register(RegisterType registerType, string userName, string pwd)
+        public RegisterResult Register(RegisterType registerType, string userName, string pwd, out string token)
         {
+            token = "";
             try
             {
-                int count = MySqlMgr.Instance.SqlSugarDB.Queryable<User>().Where(it => it.Username == userName).Count();
+                int count = MySqlMgr.Instance.SqlSugarDb.Queryable<User>().Where(it => it.Username == userName).Count();
                 if (count > 0)
                 {
                     return RegisterResult.AlreadyExist;
@@ -36,8 +38,10 @@ namespace SimpleServer.Business
                 user.Username = userName;
                 user.Password = pwd;
                 user.LoginDate = DateTime.Now;
+                user.Token = Guid.NewGuid().ToString();
+                token = user.Token;
                 //数据插入
-                MySqlMgr.Instance.SqlSugarDB.Insertable(user).ExecuteCommand();
+                MySqlMgr.Instance.SqlSugarDb.Insertable(user).ExecuteCommand();
                 return RegisterResult.Success;
             }
             catch (Exception e)
@@ -47,7 +51,7 @@ namespace SimpleServer.Business
             }
         }
 
-        public LoginResult Login(LoginType loginType, string userName, string pwd, out int userId,out string token)
+        public LoginResult Login(LoginType loginType, string userName, string pwd, out int userId, out string token)
         {
             userId = 0;
             token = "";
@@ -58,14 +62,14 @@ namespace SimpleServer.Business
                 {
                     case LoginType.Phone:
                     case LoginType.Mail:
-                        user = MySqlMgr.Instance.SqlSugarDB.Queryable<User>().Where(it => it.Username == userName).Single();
+                        user = MySqlMgr.Instance.SqlSugarDb.Queryable<User>().Where(it => it.Username == userName).Single();
                         break;
                     //如果是QQ或微信，再User里面要多存一个UnionId，判断时候是it => it.再User里面要多存一个UnionId == userName
                     case LoginType.WX:
                     case LoginType.QQ:
                         break;
                     case LoginType.Token:
-                        user = MySqlMgr.Instance.SqlSugarDB.Queryable<User>().Where(it => it.Username == userName).Single();
+                        user = MySqlMgr.Instance.SqlSugarDb.Queryable<User>().Where(it => it.Username == userName).Single();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(loginType), loginType, "登录类型错误");
@@ -77,6 +81,17 @@ namespace SimpleServer.Business
                     if (loginType == LoginType.QQ || loginType == LoginType.WX)
                     {
                         //在数据库注册
+                        user = new User
+                        {
+                            Username = userName,
+                            Password = pwd,
+                            LoginType = loginType.ToString(),
+                            Token = Guid.NewGuid().ToString(),
+                            LoginDate = DateTime.Now
+                        };
+                        //储存UnionId = userName;
+                        token = user.Token;
+                        userId = MySqlMgr.Instance.SqlSugarDb.Insertable(user).ExecuteReturnIdentity();
                         return LoginResult.Success;
                     }
                     else
@@ -92,7 +107,8 @@ namespace SimpleServer.Business
                         {
                             if (user.Password != pwd)
                                 return LoginResult.WrongPwd;
-                        }else if (loginType == LoginType.Mail)
+                        }
+                        else if (loginType == LoginType.Mail)
                         {
                             if (user.Password != pwd)
                                 return LoginResult.WrongPwd;
@@ -108,14 +124,14 @@ namespace SimpleServer.Business
                     user.Token = Guid.NewGuid().ToString();
                     user.LoginDate = DateTime.Now;
                     token = user.Token;
-                    MySqlMgr.Instance.SqlSugarDB.Updateable(user).ExecuteCommand();
+                    MySqlMgr.Instance.SqlSugarDb.Updateable(user).ExecuteCommand();
                     userId = user.Id;
                     return LoginResult.Success;
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError("登录失败: {0}",e.ToString());
+                Debug.LogError("登录失败: {0}", e.ToString());
                 return LoginResult.Failed;
             }
         }

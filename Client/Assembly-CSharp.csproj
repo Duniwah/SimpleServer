@@ -45,11 +45,13 @@
      <Compile Include="Assets\Scripts\Net\ProtocolEnum.cs" />
      <Compile Include="Assets\Scripts\Net\NetManager.cs" />
      <Compile Include="Assets\Scripts\Net\Proto\MsgBase.cs" />
+     <Compile Include="Assets\Scripts\Net\ProtocolMgr.cs" />
      <Compile Include="Assets\Scripts\Net\Base\AES.cs" />
      <Compile Include="Assets\Scripts\Net\Proto\SysMsg.cs" />
      <Compile Include="Assets\Scripts\Net\Base\Singleton.cs" />
-     <Compile Include="Assets\Scripts\Net\ProtocolMgr.cs" />
      <Compile Include="Assets\Scripts\GameStart.cs" />
+     <Compile Include="Assets\Scripts\Net\Proto\LoginMsg.cs" />
+     <Compile Include="Assets\Scripts\Net\ServerEnum.cs" />
      <Reference Include="UnityEngine">
      <HintPath>D:/Unity/2021.1.18f1c1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
      </Reference>
